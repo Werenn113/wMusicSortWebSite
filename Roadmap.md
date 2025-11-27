@@ -11,18 +11,18 @@
 - [X] **Google AI** : Récupérer la clé API Gemini.
 - [X] **Setup Backend** : Initialiser le projet AdonisJS (`npm init adonisjs@latest api-spotify`).
 - [X] **Setup Frontend** : Initialiser le projet Nuxt (`npx nuxi@latest init client-spotify`).
-- [ ] **Git** : Initialiser le repository et faire le premier commit.
+- [X] **Git** : Initialiser le repository et faire le premier commit.
 
 ## 🔐 Phase 2 : Authentification (AdonisJS)
-- [ ] Installer le package `@adonisjs/ally`.
-- [ ] Configurer `config/ally.ts` avec les crédentials Spotify.
-- [ ] Définir les scopes :
+- [X] Installer le package `@adonisjs/ally`.
+- [X] Configurer `config/ally.ts` avec les crédentials Spotify.
+- [X] Définir les scopes :
     - `user-library-read`
     - `playlist-read-private`
     - `playlist-modify-public`
     - `playlist-modify-private`
-- [ ] Créer la route `GET /auth/spotify/redirect`.
-- [ ] Créer la route `GET /auth/spotify/callback`.
+- [X] Créer la route `GET /auth/spotify/redirect`.
+- [X] Créer la route `GET /auth/spotify/callback`.
 - [ ] Gérer la persistance du Token (Cookie sécurisé ou Base de données).
 
 ## 🎵 Phase 3 : Service Spotify (Backend)

@@ -7,10 +7,9 @@ const allyConfig = defineConfig({
     clientSecret: env.get('SPOTIFY_CLIENT_SECRET'),
     callbackUrl: env.get('SPOTIFY_REDIRECT_URL'),
     scopes: [
-      'user-library-read', 
-      'playlist-read-private',
-      'playlist-modify-public',
-      'playlist-modify-private'
+      'user-read-email', 
+      'playlist-read-private', 
+      'playlist-read-collaborative'
     ]
   }),
 })

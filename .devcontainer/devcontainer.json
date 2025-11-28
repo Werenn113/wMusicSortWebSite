@@ -1,0 +1,40 @@
+{
+    "name": "Mon Stack Rapide",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/usr/src/app",
+  
+    "runServices": [
+        "backend",
+        "frontend",
+        "db",
+        "redis",
+        "cloudbeaver",
+        "redis-insight"
+    ],
+
+    // Configuration de l'IDE
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.formatOnSave": true
+            },
+            // C'est ici qu'on installe tes outils DANS VS Code automatiquement
+            "extensions": [
+                "bruno-api.bruno",        // L'extension officielle Bruno
+                "eamodio.gitlens",        // Pour Git avancé
+                "humao.rest-client",      // Alternative légère pour les requêtes HTTP
+                "mtxr.sqltools",          // Si tu veux gérer la BDD direct dans VS Code sans sortir
+                "esbenp.prettier-vscode"  // Formatage
+            ]
+        }
+    },
+
+    // Redirection des ports (Facultatif car on est dans le même réseau docker)
+    "forwardPorts": [3333, 3000, 5432, 6379, 8978, 5540],
+
+    // Commande à lancer à la création (ex: npm install)
+    "postCreateCommand": "echo 'Environnement prêt !'",
+
+    "remoteUser": "root"
+}

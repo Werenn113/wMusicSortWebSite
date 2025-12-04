@@ -1,16 +1,15 @@
 meta {
-  name: Redirect
+  name: Test
   type: http
   seq: 1
 }
 
 get {
-  url: {{base_url}}
+  url: {{base_url}}/ai/test
   body: none
   auth: inherit
 }
 
 settings {
   encodeUrl: true
-  timeout: 0
 }

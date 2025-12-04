@@ -23,17 +23,17 @@
     - `playlist-modify-private`
 - [X] Créer la route `GET /auth/spotify/redirect`.
 - [X] Créer la route `GET /auth/spotify/callback`.
-- [ ] Gérer la persistance du Token (Cookie sécurisé ou Base de données).
+- [X] Gérer la persistance du Token (Cookie sécurisé ou Base de données).
 
 ## 🎵 Phase 3 : Service Spotify (Backend)
-- [ ] Créer `app/services/SpotifyService.ts`.
-- [ ] Implémenter `getUserPlaylists(token)` : Récupérer la liste des playlists.
-- [ ] Implémenter `getPlaylistTracks(token, playlistId)` : Récupérer les morceaux.
-- [ ] **Important** : Nettoyer la donnée (garder uniquement : ID, Artiste, Titre) pour alléger le payload vers l'IA.
+- [X] Créer `app/services/SpotifyService.ts`.
+- [X] Implémenter `getUserPlaylists(token)` : Récupérer la liste des playlists.
+- [X] Implémenter `getPlaylistTracks(token, playlistId)` : Récupérer les morceaux.
+- [X] **Important** : Nettoyer la donnée (garder uniquement : ID, Artiste, Titre) pour alléger le payload vers l'IA.
 
 ## 🧠 Phase 4 : Intelligence Artificielle (Backend)
-- [ ] Installer le SDK Google Generative AI (`npm install @google/generative-ai`).
-- [ ] Créer `app/services/GeminiService.ts`.
+- [X] Installer le SDK Google Generative AI (`npm install @google/generative-ai`).
+- [X] Créer `app/services/GeminiService.ts`.
 - [ ] Définir le Prompt système (contexte + format JSON strict attendu).
 - [ ] Implémenter le système de **Batching** (paquets de 50 morceaux max pour éviter le timeout).
 - [ ] Implémenter le parsing de la réponse JSON de Gemini.

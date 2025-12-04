@@ -1,5 +1,6 @@
 import ConnectedAccount from '#models/connected_account'
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 
 
 export default class SocialsController {
@@ -23,14 +24,15 @@ export default class SocialsController {
                 provider: 'spotify'
             },
             {
-                
+                providerUserId: spotifyUser.id,
+                accessToken: spotifyUser.token.token,
+                refreshToken: spotifyUser.token.refreshToken,
+                expiresAt: DateTime.now().plus({seconds: spotifyUser.token.expiresIn})
             }
         )
 
         return {
-            message: "Connexion réussie",
-            nom: user.name,
-            accessToken: user.token.token
+            message: "Comtpe Spotify lié avec succrès !"
         }
     }
 }

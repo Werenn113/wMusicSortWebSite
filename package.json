@@ -1,0 +1,14 @@
+{
+    "name": "wmusicsort-root",
+    "private": true,
+    "scripts": {
+        "setup": "bash ./.dev/setup.sh",
+        "db:refresh": "cd backend && node ace migration:fresh",
+        "dev:backend": "cd backend && npm run dev",
+        "dev:frontend": "cd frontend && npm run dev",
+        "dev": "bash ./.dev/dev.sh"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.0"
+    }
+}

@@ -29,11 +29,8 @@ router.post('/auth/register', [AuthController, 'register'])
 router.post('/auth/login', [AuthController, 'login'])
 router.post('/auth/logout', [AuthController, 'logout']).use(middleware.auth())
 router.post('/auth/delete_user', [AuthController, 'delete_user']).use(middleware.auth())
-router.get('/auth/admin', async () => {
-  return {
-    admin: 'panel'
-  }
-}).use(middleware.auth())
+router.get('/auth/user_data', [AuthController, 'userData']).use(middleware.auth())
+
 
 router.get('/spotify/link', [SocialsController, 'redirect']).use(middleware.auth())
 router.get('auth/spotify/callback', [SocialsController, 'callback']).use(middleware.auth())

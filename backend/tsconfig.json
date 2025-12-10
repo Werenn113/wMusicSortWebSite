@@ -2,6 +2,11 @@
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
     "rootDir": "./",
-    "outDir": "./build"
+    "outDir": "./build",
+    "strict": true, // Active toutes les vérifications strictes
+    "noImplicitAny": true, // Interdit le type 'any' si non déclaré explicitement
+    "strictNullChecks": true, // Ne permet pas que 'null' ou 'undefined' soient ignorés
+    "noUnusedLocals": true, // Signale une erreur si une variable est déclarée mais pas utilisée
+    "noUnusedParameters": true // Idem pour les paramètres de fonction
   }
 }

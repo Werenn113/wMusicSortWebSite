@@ -1,19 +1,22 @@
 import User from "#models/user";
 import { HttpContext } from "@adonisjs/core/http";
+import vine from "@vinejs/vine";
 
 export default class AuthController {
     async register({ request, response, auth }: HttpContext) {
-        const { email, password } = request.only(['email', 'password'])
+        const validator = vine.compile(
+            vine.object({
+                username: vine.string().trim().minLength(3).maxLength(50),
+                email: vine.string().email().unique(async (db, value) => {
+                    const user = await db.from('users').where('email', value).first()
+                    return !user // retourne true si l'email est libre
+                }),
+                password: vine.string().minLength(6) // TODO : Changer ça
+            })
+        )
 
-        const existingUser = await User.findBy('email', email)
-        if (existingUser) {
-            return response.status(400).json({ error: 'Email déjà utilisée'})
-        }
-
-        const user = new User()
-        user.email = email
-        user.password = password
-        await user.save()
+        const payload = await request.validateUsing(validator)
+        const user = await User.create(payload)
 
         await auth.use('web').login(user)
 
@@ -21,7 +24,8 @@ export default class AuthController {
             message: 'Utilisateur créé et connecté avec succès',
             user: {
                 id: user.id,
-                email: user.email
+                email: user.email,
+                username: user.username
             }
         })
     }
@@ -61,6 +65,16 @@ export default class AuthController {
 
         return response.status(200).json({
             message: "Utilisateur supprimé avec succès"
+        })
+    }
+
+    async userData({ response, auth}: HttpContext) {
+        const user = auth.user!
+
+        return response.status(200).json({
+            id: user.id,
+            username: user.username,
+            email: user.email
         })
     }
 }

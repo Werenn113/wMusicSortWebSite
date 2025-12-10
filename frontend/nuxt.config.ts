@@ -13,7 +13,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    '/api/**': {  // remplace /api par ça :
+      proxy: 'http://127.0.0.1:3333/**' 
+  }
   },
 
   compatibilityDate: '2025-01-15',
@@ -25,5 +28,9 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
-  }
+  },
+
+  imports: {
+    dirs: ['composables/**']
+  },
 })

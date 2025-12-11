@@ -1,22 +1,16 @@
 <script setup lang="ts">
-const auth = useAuthStore()
-const { user, isAuthenticated } = storeToRefs(auth)
+const auth = useAuthStore();
+const { user, isAuthenticated } = storeToRefs(auth);
 </script>
 
 <template>
-    <UHeader title="wMusicSort">
-        <template #right>
-            <template v-if="isAuthenticated">
-                <UButton class="text-proper" :label="user?.username" variant="ghost" to="/dashboard"/>
-            </template>
+  <div class="min-h-screen bg-white dark:bg-slate-950">
+    <HeaderBar />
 
-            <template v-if="!isAuthenticated">
-                <UButton label="Login" color="primary" variant="ghost" to="/auth/login" />
-                <UButton label="Register" color="primary" variant="ghost" to="/auth/register" />
-            </template>
-        </template>
-    </UHeader>
-    <UMain>
-        <slot/>
-    </UMain>
+    <main class="min-h-[calc(100vh-4rem)]">
+      <slot />
+    </main>
+
+    <FooterBar />
+  </div>
 </template>

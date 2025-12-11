@@ -9,7 +9,9 @@ const allyConfig = defineConfig({
     scopes: [
       'user-read-email', 
       'playlist-read-private', 
-      'playlist-read-collaborative'
+      'playlist-read-collaborative',
+      'playlist-modify-public',
+      'playlist-modify-private'
     ]
   }),
 })

@@ -33,7 +33,7 @@ router.get('/auth/user_data', [AuthController, 'userData']).use(middleware.auth(
 
 
 router.get('/spotify/link', [SocialsController, 'redirect']).use(middleware.auth())
-router.get('auth/spotify/callback', [SocialsController, 'callback']).use(middleware.auth())
+router.get('/auth/spotify/callback', [SocialsController, 'callback']).use(middleware.auth())
 router.get('/spotify/playlists', [SpotifyController, 'getUserPlaylists']).use(middleware.auth())
 router.get('/spotify/tracks/:id', [SpotifyController, 'getPlaylistTracks']).use(middleware.auth())
 

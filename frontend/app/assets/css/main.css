@@ -4,19 +4,85 @@
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  /* Modern color palette inspired by MeetSponsors */
+  --color-primary-50: #F0F9FF;
+  --color-primary-100: #E0F2FE;
+  --color-primary-200: #BAE6FD;
+  --color-primary-300: #7DD3FC;
+  --color-primary-400: #38BDF8;
+  --color-primary-500: #0EA5E9;
+  --color-primary-600: #0284C7;
+  --color-primary-700: #0369A1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0C3A66;
+  --color-primary-950: #051E3E;
+
+  /* Accent purple for music theme */
+  --color-purple-50: #F3E8FF;
+  --color-purple-100: #E9D5FF;
+  --color-purple-200: #D8B4FE;
+  --color-purple-300: #C084FC;
+  --color-purple-400: #A855F7;
+  --color-purple-500: #9333EA;
+  --color-purple-600: #7E22CE;
+  --color-purple-700: #6B21A8;
+  --color-purple-800: #581C87;
+  --color-purple-900: #3F0F5C;
+  --color-purple-950: #27031A;
+
+  /* Emerald accent for positive actions */
+  --color-emerald-50: #F0FDF4;
+  --color-emerald-100: #DBEAFE;
+  --color-emerald-200: #B3F5D1;
+  --color-emerald-300: #75EDAE;
+  --color-emerald-400: #4ADE80;
+  --color-emerald-500: #10B981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065F46;
+  --color-emerald-900: #064E3B;
+  --color-emerald-950: #022C1D;
+}
+
+/* Base styles */
+html,
+body {
+  @apply bg-white dark:bg-slate-950 transition-colors duration-300;
 }
 
 .text-proper {
   text-transform: capitalize;
+}
+
+/* Section padding utilities */
+.section-py {
+  @apply py-20 lg:py-32;
+}
+
+.section-px {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+/* Hero section styles */
+.hero-subtitle {
+  @apply text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto;
+}
+
+.hero-title {
+  @apply text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent;
+}
+
+/* Button transitions */
+.btn-transition {
+  @apply transition-all duration-300 ease-out;
 }

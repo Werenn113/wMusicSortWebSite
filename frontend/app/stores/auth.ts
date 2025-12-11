@@ -3,8 +3,8 @@ import { ref } from 'vue';
 
 export const useAuthStore = defineStore("users", () => {
     const user = ref<User | null>(null);
-
     const isAuthenticated = computed(() => !!user.value)
+    const isSpotifyConnected = ref(false)
 
     async function register(registerDatas: RegisterSchema) {
         try {
@@ -51,5 +51,14 @@ export const useAuthStore = defineStore("users", () => {
         user.value = null
     }
 
-    return { user, isAuthenticated, register, login, fetchUserDatas, logout };
+    async function checkSpotifyConnection() {
+        try {
+            await $fetch('/api/spotify/playlists', {credentials: 'include'})
+            isSpotifyConnected.value = true
+        } catch (error) {
+            isSpotifyConnected.value = false
+        }
+    }
+
+    return { user, isAuthenticated, isSpotifyConnected, register, login, fetchUserDatas, logout, checkSpotifyConnection};
 });

@@ -3,8 +3,15 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
   ],
+
+  icon: {
+    clientBundle: {
+      scan: true,
+      sizeLimitKb: 256,
+    },
+  },
 
   devtools: {
     enabled: true
@@ -15,8 +22,8 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/api/**': {  // remplace /api par ça :
-      proxy: 'http://127.0.0.1:3333/**' 
-  }
+      proxy: 'http://127.0.0.1:3333/**'
+    }
   },
 
   compatibilityDate: '2025-01-15',

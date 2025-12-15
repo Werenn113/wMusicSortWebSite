@@ -9,6 +9,7 @@
         "dev": "bash ./.dev/dev.sh"
     },
     "devDependencies": {
+        "@iconify-json/lucide": "^1.2.81",
         "concurrently": "^8.2.0"
     }
 }

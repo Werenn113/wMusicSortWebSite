@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      // Lien vers l'utilisateur principal
+      // Link to main user
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
 
       table.string('provider').notNullable()

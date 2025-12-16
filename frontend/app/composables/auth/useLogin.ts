@@ -1,8 +1,8 @@
 import type { FormSubmitEvent } from "@nuxt/ui"
 
 /**
- * Composable gérant la logique de connexion de l'utilisateur.
- * Fournit le schéma de validation, l'état du formulaire et la méthode de soumission.
+ * Composable managing user login logic.
+ * Provides validation schema, form state and submission method.
  */
 export const useLogin = () => {
     const authStore = useAuthStore()
@@ -10,8 +10,8 @@ export const useLogin = () => {
     const router = useRouter()
 
     /**
-     * Objet réactif contenant les données du formulaire.
-     * Initialisé avec des valeurs indéfinies.
+     * Reactive object containing form data.
+     * Initialized with undefined values.
      */
     const loginDatas = reactive<Partial<LoginSchema>>({
         email: undefined,
@@ -19,26 +19,26 @@ export const useLogin = () => {
     })
     
     /**
-     * Gère la soumission du formulaire de connexion.
-     * Tente de connecter l'utilisateur via le store d'authentification, affiche une notification (toast) et redirige en cas de succès.
+     * Handles login form submission.
+     * Attempts to log in the user via the authentication store, displays a toast notification and redirects on success.
      *
-     * @param event - L'événement de soumission contenant les données validées par le schéma.
+     * @param event - The submission event containing schema-validated data.
      */
     async function onSubmit(event: FormSubmitEvent<LoginSchema>) {
         try {
             await authStore.login(event.data)
 
             toast.add({
-                title: "Connexion réussie",
-                description: "Vous êtes maintenant connecté.",
+                title: "Login successful",
+                description: "You are now logged in.",
                 color: 'success'
             })
 
             router.push('/dashboard')
         } catch (error) {
             toast.add({
-                title: "Echec de connexion",
-                description: "L'email ou le mot de passe est incorrect.",
+                title: "Login failed",
+                description: "Email or password is incorrect.",
                 color: 'error'
             })
         }

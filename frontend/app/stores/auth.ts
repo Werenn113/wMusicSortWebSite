@@ -35,8 +35,8 @@ export const useAuthStore = defineStore("users", () => {
     }
 
     async function fetchUserDatas() {
-        try{
-            const data = await $fetch<User>('/api/auth/user_data', {credentials: 'include'})
+        try {
+            const data = await $fetch<User>('/api/auth/user_data', { credentials: 'include' })
             user.value = data
         } catch (error) {
             user.value = null
@@ -53,12 +53,12 @@ export const useAuthStore = defineStore("users", () => {
 
     async function checkSpotifyConnection() {
         try {
-            await $fetch('/api/spotify/playlists', {credentials: 'include'})
-            isSpotifyConnected.value = true
+            const response = await $fetch<{ connected: boolean }>('/api/spotify/status', { credentials: 'include' })
+            isSpotifyConnected.value = response.connected
         } catch (error) {
             isSpotifyConnected.value = false
         }
     }
 
-    return { user, isAuthenticated, isSpotifyConnected, register, login, fetchUserDatas, logout, checkSpotifyConnection};
+    return { user, isAuthenticated, isSpotifyConnected, register, login, fetchUserDatas, logout, checkSpotifyConnection };
 });

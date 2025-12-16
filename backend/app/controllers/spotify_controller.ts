@@ -13,7 +13,103 @@ export default class SpotifyController {
         this.baseApiUrl = "https://api.spotify.com/v1"
     }
 
-    public async getUserPlaylists({ auth, response}: HttpContext) {
+    async redirect({ ally }: HttpContext) {
+        return ally.use('spotify').redirect()
+    }
+
+    async callback({ ally, auth, response }: HttpContext) {
+        const spotify = ally.use('spotify')
+
+        if (spotify.accessDenied()) {
+            const error = spotify.getError()
+            // Send message to parent window before closing
+            return response.send(`
+                <!DOCTYPE html>
+                <html>
+                <head><title>Spotify Connection Error</title></head>
+                <body>
+                    <script>
+                        if (window.opener) {
+                            window.opener.postMessage({ type: 'spotify-auth', success: false, error: '${error}' }, '*');
+                        }
+                        window.close();
+                    </script>
+                    <p>Connection error. This window will close automatically...</p>
+                </body>
+                </html>
+            `)
+        }
+
+        const spotifyUser = await spotify.user()
+        const user = auth.user!
+
+        await ConnectedAccount.updateOrCreate(
+            {
+                userId: user.id,
+                provider: 'spotify'
+            },
+            {
+                providerUserId: spotifyUser.id,
+                accessToken: spotifyUser.token.token,
+                refreshToken: spotifyUser.token.refreshToken,
+                expiresAt: DateTime.now().plus({ seconds: spotifyUser.token.expiresIn })
+            }
+        )
+
+        // Send success message and close window
+        return response.send(`
+            <!DOCTYPE html>
+            <html>
+            <head><title>Spotify Connection Successful</title></head>
+            <body>
+                <script>
+                    if (window.opener) {
+                        window.opener.postMessage({ type: 'spotify-auth', success: true }, '*');
+                    }
+                    setTimeout(() => window.close(), 500);
+                </script>
+                <p>Connection successful! This window will close automatically...</p>
+            </body>
+            </html>
+        `)
+    }
+
+    public async status({ auth, response }: HttpContext) {
+        const user = auth.user!
+
+        const spotifyAccount = await ConnectedAccount.query()
+            .where('user_id', user.id)
+            .where('provider', 'spotify')
+            .first()
+
+        return response.json({
+            connected: !!spotifyAccount,
+            provider: 'spotify'
+        })
+    }
+
+    public async logout({ auth, response }: HttpContext) {
+        const user = auth.user!
+
+        const spotifyAccount = await ConnectedAccount.query()
+            .where('user_id', user.id)
+            .where('provider', 'spotify')
+            .first()
+
+        if (!spotifyAccount) {
+            return response.status(404).json({
+                message: "No Spotify account connected"
+            })
+        }
+
+        await spotifyAccount.delete()
+
+        return response.status(200).json({
+            message: "Spotify account disconnected"
+        })
+    }
+
+    public async getUserPlaylists({ auth, response }: HttpContext) {
         const user: User = auth.user!
 
         const spotifyAccount = await ConnectedAccount.query()
@@ -33,7 +129,7 @@ export default class SpotifyController {
             })
 
             if (!apiResponse.ok) {
-                throw new Error(`Erreur Spotify: ${apiResponse.status} ${apiResponse.statusText}`)
+                throw new Error(`Spotify Error: ${apiResponse.status} ${apiResponse.statusText}`)
             }
 
             const data = await apiResponse.json() as SpotifyPlaylistsResponse
@@ -52,8 +148,8 @@ export default class SpotifyController {
             return response.json(simplifiedPlaylists)
 
         } catch (error) {
-            console.error('Erreur lors du fetch playlists:', error)
-            return response.status(500).send('Impossible de récupérer les playlists')
+            console.error('Error fetching playlists:', error)
+            return response.status(500).send('Unable to retrieve playlists')
         }
     }
 
@@ -69,15 +165,15 @@ export default class SpotifyController {
         const accessToken = await this.getValidToken(spotifyAccount)
 
         const getTracksResponse = await fetch(`${this.baseApiUrl}/playlists/${params.id}/tracks`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                }
-            })
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        })
 
         if (!getTracksResponse.ok) {
-            throw new Error(`Erreur lors de la récupération de la playlist: ${getTracksResponse.status} ${getTracksResponse.statusText}`)
+            throw new Error(`Error retrieving playlist: ${getTracksResponse.status} ${getTracksResponse.statusText}`)
         }
 
         const tracks = await getTracksResponse.json() as SpotifyTracksResponse
@@ -93,12 +189,12 @@ export default class SpotifyController {
 
 
     private async getValidToken(account: ConnectedAccount): Promise<string> {
-        const isExpired = !account.expiresAt || account.expiresAt <= DateTime.now().plus({seconds: 60})
+        const isExpired = !account.expiresAt || account.expiresAt <= DateTime.now().plus({ seconds: 60 })
         if (!isExpired && account.accessToken) {
             return account.accessToken
         }
 
-        console.log("Token expiré, rafraichissement en cours...")
+        console.log("Token expired, refreshing...")
 
         try {
             const basicAuth = Buffer.from(
@@ -120,7 +216,7 @@ export default class SpotifyController {
 
             if (!refreshResponse.ok) {
                 const errorBody = await refreshResponse.text()
-                throw new Error(`Erreur Refresh Token (${refreshResponse.status}): ${errorBody}`)
+                throw new Error(`Refresh Token Error (${refreshResponse.status}): ${errorBody}`)
             }
 
             const data = await refreshResponse.json() as SpotifyRefreshResponse
@@ -130,13 +226,13 @@ export default class SpotifyController {
                 account.refreshToken = data.refresh_token
             }
             account.expiresAt = DateTime.now().plus({ seconds: data.expires_in })
-            
+
             await account.save()
 
             return account.accessToken
         } catch (error) {
-            console.error("Impossible de rafraichir le token", error.response?.data)
-            throw new Error("Erreur de refresh token")
+            console.error("Unable to refresh token", error instanceof Error ? error.message : String(error))
+            throw new Error("Token refresh error")
         }
     }
 }

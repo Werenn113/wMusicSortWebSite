@@ -3,10 +3,7 @@ const authStore = useAuthStore();
 const { onClickLogoutButton } = useLogout();
 
 const dropdownItems = [
-  [
-    { label: "Dashboard", to: "/dashboard" },
-    { label: "Playlists", to: "/spotify/playlists" },
-  ],
+  [{ label: "Dashboard", to: "/dashboard" }],
   [{ label: "Logout", onSelect: onClickLogoutButton, class: "cursor-pointer" }],
 ];
 </script>

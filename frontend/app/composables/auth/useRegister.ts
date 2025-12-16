@@ -16,16 +16,16 @@ export const useRegister = () => {
             await authStore.register(event.data)
 
             toast.add({
-                title: "Inscription réussie",
-                description: "Vous êtes maintenant inscrit.",
+                title: "Registration successful",
+                description: "You are now registered.",
                 color: 'success'
             })
 
             router.push('/dashboard')
         } catch (error) {
             toast.add({
-                title: "Echec de l'inscription",
-                description: "L'inscription a échoué.",
+                title: "Registration failed",
+                description: "Registration has failed.",
                 color: 'error'
             })
         }

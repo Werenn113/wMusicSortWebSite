@@ -7,10 +7,8 @@ export default defineNuxtConfig({
   ],
 
   icon: {
-    clientBundle: {
-      scan: true,
-      sizeLimitKb: 256,
-    },
+    provider: 'iconify',
+    collections: ['mdi', 'lucide']
   },
 
   devtools: {

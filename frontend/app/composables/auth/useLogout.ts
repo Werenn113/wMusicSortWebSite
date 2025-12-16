@@ -6,7 +6,7 @@ export const useLogout = () => {
     async function onClickLogoutButton() {
         await auth.logout()
 
-        toast.add({ title: 'Déconnexion réussie', description: 'Vous êtes maintenant déconnecté.', color: 'success' })
+        toast.add({ title: 'Logout successful', description: 'You are now logged out.', color: 'success' })
         router.push("/")
     }
 

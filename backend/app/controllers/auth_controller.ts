@@ -9,9 +9,9 @@ export default class AuthController {
                 username: vine.string().trim().minLength(3).maxLength(50),
                 email: vine.string().email().unique(async (db, value) => {
                     const user = await db.from('users').where('email', value).first()
-                    return !user // retourne true si l'email est libre
+                    return !user // returns true if email is available
                 }),
-                password: vine.string().minLength(6) // TODO : Changer ça
+                password: vine.string().minLength(6) // TODO: Change this
             })
         )
 
@@ -21,7 +21,7 @@ export default class AuthController {
         await auth.use('web').login(user)
 
         return response.status(201).json({
-            message: 'Utilisateur créé et connecté avec succès',
+            message: 'User created and logged in successfully',
             user: {
                 id: user.id,
                 email: user.email,
@@ -38,7 +38,7 @@ export default class AuthController {
         await auth.use('web').login(user)
 
         return response.status(200).json({
-            message: "Utilisateur connecté avec succès",
+            message: "User logged in successfully",
             user: {
                 id: user.id,
                 email: user.email
@@ -51,7 +51,7 @@ export default class AuthController {
         await auth.use('web').logout()
 
         return response.status(200).json({
-            message: "Déconnexion réussie"
+            message: "Logout successful"
         })
     }
 
@@ -64,7 +64,7 @@ export default class AuthController {
         await user.delete()
 
         return response.status(200).json({
-            message: "Utilisateur supprimé avec succès"
+            message: "User deleted successfully"
         })
     }
 

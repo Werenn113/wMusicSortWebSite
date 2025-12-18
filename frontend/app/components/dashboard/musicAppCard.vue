@@ -1,3 +1,18 @@
+<!--
+  Carte représentant une application musicale dans le dashboard.
+  
+  Affiche les informations d'une app musicale avec ses boutons d'action.
+  
+  Props :
+  - musicApp : Données de l'application musicale
+  
+  Fonctionnalités :
+  - Icône colorée de l'application
+  - État de connexion (Connecté, Non connecté, Coming Soon)
+  - Boutons Connect/Disconnect
+  - Lien vers la page d'analyse (si connecté)
+  - État désactivé pour apps "Coming Soon"
+-->
 <script setup lang="ts">
 const props = defineProps<{
   musicApp: MusicApp;

@@ -1,9 +1,12 @@
 <script setup lang="ts">
-defineProps({
-  links: {
-    type: Array,
-  },
-});
+interface Link {
+  text: string
+  to: string
+}
+
+defineProps<{
+  links: Link[]
+}>()
 </script>
 
 <template>

@@ -1,9 +1,14 @@
 <script setup lang="ts">
-const links = [
+interface Link {
+  text: string
+  to: string
+}
+
+const links: Link[] = [
   { text: "Home", to: "/" },
   { text: "Features", to: "#features" },
   { text: "Pricing", to: "#pricing" },
-];
+]
 </script>
 
 <template>
@@ -13,7 +18,7 @@ const links = [
     <nav class="px-4">
       <div class="flex items-center h-16 relative">
         <!-- Logo (Left) -->
-        <div class="flex-shrink-0">
+        <div class="shrink-0">
           <HeaderPageTitle title="wMusicSort" icon="i-lucide-music" />
         </div>
 

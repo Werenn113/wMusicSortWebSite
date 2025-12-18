@@ -4,7 +4,6 @@
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
 
-  /* Modern color palette inspired by MeetSponsors */
   --color-primary-50: #F0F9FF;
   --color-primary-100: #E0F2FE;
   --color-primary-200: #BAE6FD;
@@ -17,7 +16,6 @@
   --color-primary-900: #0C3A66;
   --color-primary-950: #051E3E;
 
-  /* Accent purple for music theme */
   --color-purple-50: #F3E8FF;
   --color-purple-100: #E9D5FF;
   --color-purple-200: #D8B4FE;
@@ -30,7 +28,6 @@
   --color-purple-900: #3F0F5C;
   --color-purple-950: #27031A;
 
-  /* Emerald accent for positive actions */
   --color-emerald-50: #F0FDF4;
   --color-emerald-100: #DBEAFE;
   --color-emerald-200: #B3F5D1;
@@ -44,45 +41,18 @@
   --color-emerald-950: #022C1D;
 }
 
-/* Base styles */
-html,
-body {
-  @apply bg-white dark:bg-slate-950 transition-colors duration-300;
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
 }
 
-.text-proper {
-  text-transform: capitalize;
-}
-
-/* Section padding utilities */
-.section-py {
-  @apply py-20 lg:py-32;
-}
-
-.section-px {
-  @apply px-4 sm:px-6 lg:px-8;
-}
-
-/* Hero section styles */
-.hero-subtitle {
-  @apply text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto;
-}
-
-.hero-title {
-  @apply text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white;
-}
-
-/* Card hover effects */
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
-}
-
-/* Gradient text */
-.gradient-text {
-  @apply bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent;
-}
-
-/* Button transitions */
-.btn-transition {
-  @apply transition-all duration-300 ease-out;
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
 }

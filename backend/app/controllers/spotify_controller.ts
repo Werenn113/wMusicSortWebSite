@@ -83,8 +83,7 @@ export default class SpotifyController {
             .first()
 
         return response.json({
-            connected: !!spotifyAccount,
-            provider: 'spotify'
+            connected: !!spotifyAccount
         })
     }
 
@@ -164,7 +163,7 @@ export default class SpotifyController {
 
         const accessToken = await this.getValidToken(spotifyAccount)
 
-        const getTracksResponse = await fetch(`${this.baseApiUrl}/playlists/${params.id}/tracks`, {
+        const getTracksResponse = await fetch(`${this.baseApiUrl}/playlists/${params.playlistId}/tracks`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

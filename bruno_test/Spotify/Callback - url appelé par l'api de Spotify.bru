@@ -1,11 +1,11 @@
 meta {
-  name: Tracks
+  name: Callback - url appelé par l'api de Spotify
   type: http
-  seq: 5
+  seq: 2
 }
 
 get {
-  url: {{base_url}}/spotify/tracks/{{id}}
+  url: {{base_url}}/spotify/callback
   body: none
   auth: inherit
 }

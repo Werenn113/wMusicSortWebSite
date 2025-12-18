@@ -1,3 +1,16 @@
+<!--
+  Page du tableau de bord utilisateur.
+  
+  Affiche les applications musicales disponibles avec leur état de connexion.
+  Vérifie automatiquement la connexion Spotify au montage.
+  
+  Middleware : auth (nécessite authentification)
+  
+  Fonctionnalités :
+  - Affichage des cartes d'applications musicales
+  - Grille responsive (4 colonnes)
+  - Vérification de la connexion Spotify
+-->
 <script setup lang="ts">
 const { musicApps } = useMusicApps();
 const authStore = useAuthStore();

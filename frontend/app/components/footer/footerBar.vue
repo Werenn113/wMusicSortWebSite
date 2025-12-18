@@ -1,3 +1,16 @@
+<!--
+  Composant du pied de page principal.
+  
+  Footer complet avec 4 colonnes : Brand, Product, Company, Legal.
+  Support du mode sombre et liens vers les différentes sections du site.
+  
+  Fonctionnalités :
+  - Grille responsive (4 colonnes sur desktop)
+  - Informations sur la marque
+  - Liens de navigation
+  - Liens légaux (Privacy, Terms, etc.)
+  - Copyright avec année dynamique
+-->
 <!-- Footer -->
 <template>
   <footer

@@ -1,3 +1,15 @@
+<!--
+  Composant des boutons d'authentification dans le header.
+  
+  Affiche différents boutons selon l'état d'authentification :
+  - Non authentifié : Boutons Sign In / Register
+  - Authentifié : Dropdown menu avec username, Dashboard et Logout
+  
+  Fonctionnalités :
+  - Affichage conditionnel selon authStore
+  - Menu déroulant pour utilisateur connecté
+  - Actions de navigation et déconnexion
+-->
 <script setup lang="ts">
 const authStore = useAuthStore();
 const { onClickLogoutButton } = useLogout();

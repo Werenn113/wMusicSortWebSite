@@ -1,3 +1,13 @@
+<!--
+  Composant de la section Product dans le footer.
+  
+  Liste des liens liés au produit (Home, Features, Pricing).
+  
+  Fonctionnalités :
+  - Liens de navigation vers les sections principales
+  - Support du dark mode
+  - Effets hover
+-->
 <template>
   <div>
     <h3 class="font-semibold text-slate-900 dark:text-white mb-4">Product</h3>

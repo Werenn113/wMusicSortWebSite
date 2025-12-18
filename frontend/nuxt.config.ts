@@ -20,7 +20,22 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/api/**': {  // remplace /api par ça :
-      proxy: 'http://127.0.0.1:3333/**'
+      proxy: {
+        to: 'http://127.0.0.1:3333/**',
+        cookieDomainRewrite: '',
+        cookiePathRewrite: '/'
+      }
+    }
+  },
+
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3333',
+        changeOrigin: false,
+        cookieDomainRewrite: '',
+        prependPath: false
+      }
     }
   },
 

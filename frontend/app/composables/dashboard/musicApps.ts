@@ -1,8 +1,42 @@
+/**
+ * Composable fournissant la liste des applications musicales supportées.
+ * 
+ * Retourne un computed contenant toutes les applications musicales avec leur état
+ * de connexion et leurs callbacks d'action.
+ * 
+ * @returns Liste réactive des applications musicales disponibles
+ * 
+ * @example
+ * ```vue
+ * <script setup>
+ * const { musicApps } = useMusicApps()
+ * </script>
+ * 
+ * <template>
+ *   <div v-for="app in musicApps" :key="app.name">
+ *     {{ app.name }} - {{ app.isConnected ? 'Connecté' : 'Non connecté' }}
+ *   </div>
+ * </template>
+ * ```
+ */
 export const useMusicApps = () => {
     const authStore = useAuthStore()
     const { spotifyConnection } = useSpotifyLogin()
     const { spotifyDisconnection } = useSpotifyLogout()
 
+    /**
+     * Liste computed des applications musicales avec leur configuration.
+     * 
+     * Applications actuellement configurées :
+     * - Spotify (✅ disponible)
+     * - Apple Music (🔜 à venir)
+     * - YouTube Music (🔜 à venir)
+     * - Deezer (🔜 à venir)
+     * - Tidal (🔜 à venir)
+     * - SoundCloud (🔜 à venir)
+     * - Amazon Music (🔜 à venir)
+     * - Pandora (🔜 à venir)
+     */
     const musicApps = computed<MusicApp[]>(() => [
         {
             name: 'Spotify',

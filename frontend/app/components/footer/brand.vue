@@ -1,3 +1,13 @@
+<!--
+  Composant de la section marque dans le footer.
+  
+  Affiche le logo, le nom de l'application et le slogan.
+  
+  Fonctionnalités :
+  - Logo avec icône et gradient
+  - Nom de l'application
+  - Description courte (tagline)
+-->
 <template>
   <div class="space-y-4">
     <div class="flex items-center gap-2">

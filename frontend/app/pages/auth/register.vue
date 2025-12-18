@@ -1,3 +1,17 @@
+<!--
+  Page d'enregistrement utilisateur.
+  
+  Formulaire d'inscription avec validation Zod.
+  Redirige vers /dashboard en cas de succès.
+  
+  Middleware : guest (redirige vers /dashboard si déjà authentifié)
+  
+  Fonctionnalités :
+  - Formulaire email/username/password
+  - Validation côté client (Zod)
+  - Notifications toast pour les erreurs
+  - Lien vers la page de connexion
+-->
 <script setup lang="ts">
 const { registerDatas, onSubmit } = useRegister();
 

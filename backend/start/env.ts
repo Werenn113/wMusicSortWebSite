@@ -11,6 +11,13 @@
 
 import { Env } from '@adonisjs/core/env'
 
+/**
+ * Service de validation et de typage des variables d'environnement
+ * Définit le schéma de toutes les variables requises pour l'application
+ * @module env
+ * @description Configuration des variables d'environnement avec validation de type
+ */
+
 export default await Env.create(new URL('../', import.meta.url), {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),

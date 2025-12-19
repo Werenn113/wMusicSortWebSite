@@ -19,6 +19,9 @@ import GeminiController from '#controllers/gemini_controller'
 |--------------------------------------------------------------------------
 | Authentication Routes
 |--------------------------------------------------------------------------
+| Routes pour la gestion de l'authentification des utilisateurs
+| - Routes publiques : inscription et connexion
+| - Routes protégées : déconnexion, suppression de compte, données utilisateur
 */
 router
   .group(() => {
@@ -41,6 +44,14 @@ router
 |--------------------------------------------------------------------------
 | Spotify Integration Routes
 |--------------------------------------------------------------------------
+| Routes pour l'intégration avec l'API Spotify
+| Toutes les routes sont protégées par le middleware d'authentification
+| - /link : Initie la connexion OAuth avec Spotify
+| - /callback : Gère le retour OAuth de Spotify
+| - /status : Vérifie l'état de la connexion Spotify
+| - /logout : Déconnecte le compte Spotify
+| - /playlists : Récupère les playlists de l'utilisateur
+| - /tracks/:playlistId : Récupère les morceaux d'une playlist
 */
 router
   .group(() => {
@@ -58,9 +69,13 @@ router
 |--------------------------------------------------------------------------
 | AI Routes
 |--------------------------------------------------------------------------
+| Routes pour l'intégration avec l'API Google Gemini AI
+| - /test : Route de test pour vérifier la connexion à l'API
+|   Accepte un prompt personnalisé dans le body: { "prompt": "votre question" }
 */
 router
   .group(() => {
-    router.get('/test', [GeminiController, 'promptTest'])
+    router.post('/class', [GeminiController, 'classTracks'])
   })
   .prefix('/ai')
+  .use(middleware.auth())

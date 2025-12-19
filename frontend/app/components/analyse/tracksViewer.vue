@@ -10,9 +10,11 @@
   - Message d'invite si aucune playlist sélectionnée
   - Scroll automatique pour listes longues
   - Effet hover sur les tracks
+  - Modification manuelle du genre via liste déroulante
 -->
 <script setup lang="ts">
 const { selectedTracks, selectedPlaylistName } = useSelectedPlaylist();
+const { categories } = useCategoryManager();
 </script>
 
 <template>
@@ -61,7 +63,23 @@ const { selectedTracks, selectedPlaylistName } = useSelectedPlaylist();
             {{ track.artists.join(", ") }}
           </div>
         </div>
-        <div class="ml-auto mr-16">{{ track.genre ? track.genre : "-" }}</div>
+        <div class="ml-auto w-40">
+          <!-- TODO : gérer le pourcentage de confiance -->
+          <select
+            :value="track.genre || ''"
+            class="w-full bg-slate-700 text-slate-200 border border-slate-600 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors cursor-pointer"
+          >
+            <option value="" class="cursor-pointer">-</option>
+            <option
+              v-for="category in categories"
+              :key="category.name"
+              :value="category"
+              class="cursor-pointer"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
   </div>

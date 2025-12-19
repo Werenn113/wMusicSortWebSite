@@ -1,6 +1,15 @@
 import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
 
+/**
+ * Configuration de la base de données
+ * Utilise PostgreSQL comme connexion par défaut
+ * @module dbConfig
+ * @description Configuration pour :
+ * - Connexion PostgreSQL avec paramètres depuis l'environnement
+ * - Migrations avec tri naturel dans le dossier database/migrations
+ */
+
 const dbConfig = defineConfig({
   connection: 'postgres',
   connections: {

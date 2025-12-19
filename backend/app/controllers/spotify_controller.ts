@@ -1,22 +1,46 @@
 import ConnectedAccount from "#models/connected_account";
 import env from "#start/env";
 import { HttpContext } from "@adonisjs/core/http";
-import { Playlist, SpotifyPlaylistsResponse, SpotifyRefreshResponse, SpotifyTracksResponse, Tracks } from "#types/spotify"
+import { Playlist, SpotifyPlaylistsResponse, SpotifyRefreshResponse, SpotifyTracksResponse, Track } from "#types/spotify"
 import { DateTime } from "luxon";
 import User from "#models/user";
 
-
+/**
+ * Contrôleur pour gérer les interactions avec l'API Spotify
+ * Gère l'authentification OAuth, la récupération des playlists et des tracks
+ * @class SpotifyController
+ */
 export default class SpotifyController {
+    /**
+     * URL de base de l'API Spotify
+     * @private
+     * @type {string}
+     */
     private baseApiUrl: string
 
+    /**
+     * Initialise le contrôleur avec l'URL de base de l'API Spotify
+     * @constructor
+     */
     constructor() {
         this.baseApiUrl = "https://api.spotify.com/v1"
     }
 
+    /**
+     * Redirige l'utilisateur vers la page d'autorisation OAuth Spotify
+     * @param {HttpContext} context - Contexte HTTP contenant ally
+     * @returns {Promise<void>} Redirection vers Spotify
+     */
     async redirect({ ally }: HttpContext) {
         return ally.use('spotify').redirect()
     }
 
+    /**
+     * Gère le callback OAuth de Spotify après autorisation
+     * Enregistre ou met à jour le compte Spotify connecté pour l'utilisateur
+     * @param {HttpContext} context - Contexte HTTP contenant ally, auth et response
+     * @returns {Promise<void>} Page HTML avec script de communication avec la fenêtre parente
+     */
     async callback({ ally, auth, response }: HttpContext) {
         const spotify = ally.use('spotify')
 
@@ -74,48 +98,56 @@ export default class SpotifyController {
         `)
     }
 
+    /**
+     * Vérifie si l'utilisateur a un compte Spotify connecté
+     * @param {HttpContext} context - Contexte HTTP contenant auth et response
+     * @returns {Promise<void>} JSON avec statut de connexion { connected: boolean }
+     */
     public async status({ auth, response }: HttpContext) {
         const user = auth.user!
 
-        const spotifyAccount = await ConnectedAccount.query()
-            .where('user_id', user.id)
-            .where('provider', 'spotify')
-            .first()
-
-        return response.json({
-            connected: !!spotifyAccount
-        })
+        try {
+            await this.getSpotifyAccount(user.id)
+            return response.json({ connected: true })
+        } catch (error) {
+            return response.json({ connected: false })
+        }
     }
 
+    /**
+     * Déconnecte le compte Spotify de l'utilisateur
+     * Supprime les données du compte connecté de la base de données
+     * @param {HttpContext} context - Contexte HTTP contenant auth et response
+     * @returns {Promise<void>} JSON avec message de confirmation ou erreur 404
+     */
     public async logout({ auth, response }: HttpContext) {
         const user = auth.user!
 
-        const spotifyAccount = await ConnectedAccount.query()
-            .where('user_id', user.id)
-            .where('provider', 'spotify')
-            .first()
+        try {
+            const spotifyAccount = await this.getSpotifyAccount(user.id)
+            await spotifyAccount.delete()
 
-        if (!spotifyAccount) {
+            return response.status(200).json({
+                message: "Compte Spotify déconnecté avec succès"
+            })
+        } catch (error) {
             return response.status(404).json({
-                message: "No Spotify account connected"
+                error: "Aucun compte Spotify connecté"
             })
         }
-
-        await spotifyAccount.delete()
-
-        return response.status(200).json({
-            message: "Spotify account disconnected"
-        })
     }
 
+    /**
+     * Récupère la liste des playlists de l'utilisateur depuis Spotify
+     * Limite de 50 playlists par requête
+     * @param {HttpContext} context - Contexte HTTP contenant auth et response
+     * @returns {Promise<void>} JSON avec tableau de playlists simplifiées
+     * @throws {Error} Si le compte Spotify n'est pas trouvé ou si l'API Spotify échoue
+     */
     public async getUserPlaylists({ auth, response }: HttpContext) {
         const user: User = auth.user!
 
-        const spotifyAccount = await ConnectedAccount.query()
-            .where('user_id', user.id)
-            .where('provider', 'spotify')
-            .firstOrFail()
-
+        const spotifyAccount = await this.getSpotifyAccount(user.id)
         const accessToken = await this.getValidToken(spotifyAccount)
 
         try {
@@ -128,7 +160,8 @@ export default class SpotifyController {
             })
 
             if (!apiResponse.ok) {
-                throw new Error(`Spotify Error: ${apiResponse.status} ${apiResponse.statusText}`)
+                const errorBody = await apiResponse.text()
+                throw new Error(`Spotify API Error (${apiResponse.status}): ${errorBody}`)
             }
 
             const data = await apiResponse.json() as SpotifyPlaylistsResponse
@@ -147,46 +180,81 @@ export default class SpotifyController {
             return response.json(simplifiedPlaylists)
 
         } catch (error) {
-            console.error('Error fetching playlists:', error)
-            return response.status(500).send('Unable to retrieve playlists')
+            console.error('Erreur lors de la récupération des playlists:', error)
+            return response.status(500).json({
+                error: 'Impossible de récupérer les playlists',
+                detail: error instanceof Error ? error.message : 'Erreur inconnue'
+            })
         }
     }
 
-
+    /**
+     * Récupère toutes les tracks d'une playlist Spotify spécifique
+     * @param {HttpContext} context - Contexte HTTP contenant auth, params et response
+     * @param {string} context.params.playlistId - ID de la playlist Spotify
+     * @returns {Promise<void>} JSON avec tableau de tracks simplifiées
+     * @throws {Error} Si le compte Spotify n'est pas trouvé ou si l'API Spotify échoue
+     */
     public async getPlaylistTracks({ auth, params, response }: HttpContext) {
         const user: User = auth.user!
 
-        const spotifyAccount = await ConnectedAccount.query()
-            .where('user_id', user.id)
-            .where('provider', 'spotify')
-            .firstOrFail()
-
+        const spotifyAccount = await this.getSpotifyAccount(user.id)
         const accessToken = await this.getValidToken(spotifyAccount)
 
-        const getTracksResponse = await fetch(`${this.baseApiUrl}/playlists/${params.playlistId}/tracks`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json'
-            }
-        })
+        try {
+            const getTracksResponse = await fetch(`${this.baseApiUrl}/playlists/${params.playlistId}/tracks`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
 
-        if (!getTracksResponse.ok) {
-            throw new Error(`Error retrieving playlist: ${getTracksResponse.status} ${getTracksResponse.statusText}`)
+            if (!getTracksResponse.ok) {
+                const errorBody = await getTracksResponse.text()
+                throw new Error(`Spotify API Error (${getTracksResponse.status}): ${errorBody}`)
+            }
+
+            const tracks = await getTracksResponse.json() as SpotifyTracksResponse
+            const simplifiedTracks: Track[] = tracks.items.map((track) => {
+                return {
+                    id: track.track.id,
+                    name: track.track.name,
+                    artists: track.track.artists.map(artist => artist.name)
+                }
+            })
+            return response.json(simplifiedTracks)
+        } catch (error) {
+            console.error('Erreur lors de la récupération des tracks:', error)
+            return response.status(500).json({
+                error: 'Impossible de récupérer les tracks de la playlist',
+                detail: error instanceof Error ? error.message : 'Erreur inconnue'
+            })
         }
-
-        const tracks = await getTracksResponse.json() as SpotifyTracksResponse
-        const simplifiedTracks: Tracks[] = tracks.items.map((track) => {
-            return {
-                id: track.track.id,
-                name: track.track.name,
-                artists: track.track.artists.map(artist => artist.name)
-            }
-        })
-        return response.json(simplifiedTracks)
     }
 
+    /**
+     * Récupère le compte Spotify connecté pour un utilisateur
+     * @private
+     * @param {number} userId - ID de l'utilisateur
+     * @returns {Promise<ConnectedAccount>} Compte Spotify connecté
+     * @throws {ModelNotFoundException} Si aucun compte Spotify n'est trouvé
+     */
+    private async getSpotifyAccount(userId: number): Promise<ConnectedAccount> {
+        return await ConnectedAccount.query()
+            .where('user_id', userId)
+            .where('provider', 'spotify')
+            .firstOrFail()
+    }
 
+    /**
+     * Obtient un token d'accès valide pour l'API Spotify
+     * Rafraîchit automatiquement le token s'il est expiré ou expire dans moins de 60 secondes
+     * @private
+     * @param {ConnectedAccount} account - Compte connecté Spotify de l'utilisateur
+     * @returns {Promise<string>} Token d'accès valide
+     * @throws {Error} Si le rafraîchissement du token échoue
+     */
     private async getValidToken(account: ConnectedAccount): Promise<string> {
         const isExpired = !account.expiresAt || account.expiresAt <= DateTime.now().plus({ seconds: 60 })
         if (!isExpired && account.accessToken) {

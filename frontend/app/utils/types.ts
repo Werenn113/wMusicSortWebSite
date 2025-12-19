@@ -62,6 +62,25 @@ export type Playlist = {
     url: string
 }
 
+
+/**
+ * Represents a music genre with its associated confidence score.
+ * 
+ * @remarks
+ * This type is used to store genre classification results, where the confidence
+ * value indicates the certainty of the classification.
+ * 
+ * @property name - The name of the genre (e.g., "Rock", "Jazz", "Classical")
+ * @property confidence - A numeric value representing the confidence level of the genre classification,
+ *                        typically ranging from 0 to 100 where higher values indicate greater certainty
+ */
+export type Genre = {
+    name: string
+    confidence: number
+}
+
+
+
 /**
  * Représente un morceau musical.
  * 
@@ -74,5 +93,25 @@ export type Track = {
     id: string
     name: string
     artists: string[]
-    genre: string
+    genre: Genre
+}
+
+
+/**
+ * Représente une piste musicale classifiée par Gemini.
+ * 
+ * @remarks
+ * Ce type définit la structure d'une piste après son traitement par le système de classification Gemini.
+ * 
+ * @property id - L'identifiant unique de la piste
+ * @property title - Le titre de la piste musicale
+ * @property artists - La liste des artistes associés à la piste
+ * @property category - La catégorie assignée à la piste par Gemini
+ */
+export type GeminiClassifiedTrack = {
+    id: string
+    title: string
+    artists: string[]
+    category: string
+    confidence: number
 }

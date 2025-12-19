@@ -2,6 +2,14 @@ import { defineConfig } from '@adonisjs/auth'
 import { sessionGuard, sessionUserProvider } from '@adonisjs/auth/session'
 import type { InferAuthenticators, InferAuthEvents, Authenticators } from '@adonisjs/auth/types'
 
+/**
+ * Configuration du système d'authentification
+ * Utilise des sessions pour gérer l'authentification des utilisateurs
+ * @module authConfig
+ * @description Configuration avec guard de session 'web' par défaut
+ * Les tokens "Remember Me" sont désactivés
+ */
+
 const authConfig = defineConfig({
   default: 'web',
   guards: {

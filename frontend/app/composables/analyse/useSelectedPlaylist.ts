@@ -20,7 +20,7 @@
 export const useSelectedPlaylist = () => {
     /** Liste des tracks de la playlist sélectionnée (état global) */
     const selectedTracks = useState<Track[]>('selectedPlaylistTracks', () => [])
-    
+
     /** Nom de la playlist sélectionnée (état global) */
     const selectedPlaylistName = useState<string>('selectedPlaylistName', () => '')
 
@@ -44,10 +44,27 @@ export const useSelectedPlaylist = () => {
         selectedPlaylistName.value = ''
     }
 
+    /**
+     * Met à jour le genre d'une track spécifique.
+     * 
+     * @param trackId - L'ID de la track à mettre à jour
+     * @param genre - Le nouveau genre à assigner
+     */
+    const updateTrackGenre = (trackId: string, genreName: string, genreConfidence: number) => {
+        const track = selectedTracks.value.find(t => t.id === trackId)
+        if (track) {
+            track.genre = {
+                name: genreName,
+                confidence: genreConfidence
+            }
+        }
+    }
+
     return {
         selectedTracks: readonly(selectedTracks),
         selectedPlaylistName: readonly(selectedPlaylistName),
         setPlaylist,
-        clearPlaylist
+        clearPlaylist,
+        updateTrackGenre
     }
 }

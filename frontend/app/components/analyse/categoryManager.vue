@@ -12,6 +12,7 @@
 -->
 <script setup lang="ts">
 const { categories, addCategory, removeCategory } = useCategoryManager();
+const { isLoading, startAnalysis } = useStartAnalysis();
 </script>
 
 <template>
@@ -32,8 +33,16 @@ const { categories, addCategory, removeCategory } = useCategoryManager();
     </div>
 
     <div>
-      <UButton color="primary" size="xl" class="px-8">
-        <UIcon name="i-lucide-play" /> Start Sorting
+      <UButton
+        @click="startAnalysis"
+        :loading="isLoading"
+        :disabled="isLoading || categories.length === 0"
+        color="primary"
+        size="xl"
+        class="px-8 cursor-pointer"
+      >
+        <UIcon name="i-lucide-play" />
+        {{ isLoading ? "Analyzing..." : "Start Sorting" }}
       </UButton>
     </div>
   </div>

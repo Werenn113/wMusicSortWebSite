@@ -13,14 +13,18 @@ import 'reflect-metadata'
 import { Ignitor, prettyPrintError } from '@adonisjs/core'
 
 /**
- * URL to the application root. AdonisJS need it to resolve
- * paths to file and directories for scaffolding commands
+ * Racine de l'application
+ * AdonisJS l'utilise pour résoudre les chemins vers les fichiers et dossiers
+ * @constant {URL} APP_ROOT
  */
 const APP_ROOT = new URL('../', import.meta.url)
 
 /**
- * The importer is used to import files in context of the
- * application.
+ * Fonction d'importation pour charger les fichiers dans le contexte de l'application
+ * Gère les chemins relatifs et absolus
+ * @function IMPORTER
+ * @param {string} filePath - Chemin du fichier à importer
+ * @returns {Promise<any>} Module importé
  */
 const IMPORTER = (filePath: string) => {
   if (filePath.startsWith('./') || filePath.startsWith('../')) {

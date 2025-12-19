@@ -4,16 +4,18 @@ import { Secret } from '@adonisjs/core/helpers'
 import { defineConfig } from '@adonisjs/core/http'
 
 /**
- * The app key is used for encrypting cookies, generating signed URLs,
- * and by the "encryption" module.
- *
- * The encryption module will fail to decrypt data if the key is lost or
- * changed. Therefore it is recommended to keep the app key secure.
+ * Clé secrète de l'application
+ * Utilisée pour chiffrer les cookies, générer des URLs signées et le module de chiffrement
+ * @type {Secret}
+ * @warning Le module de chiffrement échouera à déchiffrer si la clé est perdue ou modifiée
+ * @important Gardez cette clé en sécurité et ne la partagez jamais
  */
 export const appKey = new Secret(env.get('APP_KEY'))
 
 /**
- * The configuration settings used by the HTTP server
+ * Configuration du serveur HTTP
+ * Définit les paramètres de comportement du serveur et des cookies
+ * @module http
  */
 export const http = defineConfig({
   generateRequestId: true,

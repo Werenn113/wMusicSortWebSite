@@ -16,8 +16,8 @@
  * ```
  */
 export const useCategoryManager = () => {
-    /** Liste réactive des catégories créées */
-    const categories = ref<Category[]>([]);
+    /** Liste réactive des catégories créées - partagée globalement */
+    const categories = useState<Category[]>('categories', () => []);
 
     /**
      * Classes Tailwind de couleurs disponibles pour les catégories.

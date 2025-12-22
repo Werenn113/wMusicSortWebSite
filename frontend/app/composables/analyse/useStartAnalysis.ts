@@ -3,6 +3,7 @@ export const useStartAnalysis = () => {
     const { selectedTracks, updateTrackGenre } = useSelectedPlaylist();
 
     const isLoading = ref(false);
+    const isFinish = ref(false)
 
     const startAnalysis = async () => {
         isLoading.value = true;
@@ -20,15 +21,17 @@ export const useStartAnalysis = () => {
             });
 
             result.forEach((classifiedTrack) => {
-                updateTrackGenre(classifiedTrack.id, classifiedTrack.category, classifiedTrack.confidence);
+                updateTrackGenre(classifiedTrack.id, classifiedTrack.categories);
             });
         } finally {
             isLoading.value = false;
+            isFinish.value = true
         }
     };
 
     return {
         isLoading,
+        isFinish,
         startAnalysis,
     };
 };

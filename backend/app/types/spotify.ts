@@ -239,8 +239,18 @@ export interface Track {
 }
 
 /**
+ * Représente un score de confiance pour une catégorie donnée
+ * @interface CategoryConfidence
+ * @exports
+ */
+export interface CategoryConfidence {
+  name: string
+  confidence: number // Pourcentage de confiance (0-100)
+}
+
+/**
  * Représente un morceau classifié par l'IA Gemini
- * Contient les informations de la track avec sa catégorie assignée
+ * Contient les informations de la track avec toutes les catégories et leurs scores de confiance
  * @interface GeminiClassifiedTrack
  * @exports
  */
@@ -248,6 +258,5 @@ export interface GeminiClassifiedTrack {
   id: string
   title: string
   artists: string[]
-  category: string
-  confidence: number // Pourcentage de confiance (0-100)
+  categories: CategoryConfidence[]
 }

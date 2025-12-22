@@ -8,6 +8,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
  * - id : Identifiant auto-incrémenté
  * - track_id : Référence vers la track (CASCADE on delete)
  * - category_name : Nom de la catégorie assignée
+ * - confidence : Niveau de confiance
  * - created_at/updated_at : Horodatages
  */
 export default class extends BaseSchema {
@@ -22,6 +23,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('track_id').unsigned().references('tracks.id').onDelete('CASCADE')
       table.string('category_name').notNullable()
+      table.integer('confidence')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

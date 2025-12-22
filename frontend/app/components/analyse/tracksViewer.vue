@@ -14,7 +14,7 @@
 -->
 <script setup lang="ts">
 const { selectedTracks, selectedPlaylistName } = useSelectedPlaylist();
-const { categories } = useCategoryManager();
+const { getBestCategory } = useCategoryManager();
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const { categories } = useCategoryManager();
           v-if="selectedPlaylistName"
           class="text-slate-400 text-base font-normal ml-2"
         >
-          - {{ selectedPlaylistName }}</span
+          - &nbsp;{{ selectedPlaylistName }}</span
         >
       </h2>
     </div>
@@ -64,19 +64,21 @@ const { categories } = useCategoryManager();
           </div>
         </div>
         <div class="ml-auto w-40">
-          <!-- TODO : gérer le pourcentage de confiance -->
           <select
-            :value="track.genre || ''"
+            :value="getBestCategory(track.categories)?.name || ''"
             class="w-full bg-slate-700 text-slate-200 border border-slate-600 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors cursor-pointer"
           >
             <option value="" class="cursor-pointer">-</option>
             <option
-              v-for="category in categories"
+              v-for="category in track.categories"
               :key="category.name"
-              :value="category"
+              :value="category.name"
               class="cursor-pointer"
             >
               {{ category.name }}
+              <span v-if="category.confidence">
+                ({{ category.confidence }}%)
+              </span>
             </option>
           </select>
         </div>

@@ -66,13 +66,15 @@ class MusicClassifierService {
       })
 
     return existingTracks
-      .filter(track => track.genres.length > 0)
+      .filter(track => track.genres.length === categories.length) // si tous les genres sont trouvé
       .map(track => ({
         id: track.providerId,
         title: track.title,
         artists: track.artists,
-        category: track.genres[0].categoryName,
-        confidence: 100 // Les tracks déjà classifiées ont une confiance maximale
+        categories: track.genres.map(genre => ({
+          name: genre.categoryName,
+          confidence: genre.confidence
+        }))
       }))
   }
 
@@ -91,16 +93,27 @@ class MusicClassifierService {
         Voici une liste de musiques à classer : ${JSON.stringify(tracks)}.
 
         TÂCHE :
-        Pour chaque musique, assigne la catégorie la plus pertinente parmi la liste fournie.
-        Évalue également ton niveau de confiance dans cette classification.
+        Pour chaque musique, évalue son appartenance à CHAQUE catégorie de la liste.
+        Attribue un score de confiance pour chaque catégorie.
 
         FORMAT DE RÉPONSE ATTENDU :
         Un tableau JSON strict d'objets. Chaque objet doit avoir :
         - "id" (l'id de la track)
         - "title" (utilise le champ 'name' des tracks fournies)
         - "artists" (tableau de noms d'artistes)
-        - "category" (la catégorie choisie)
-        - "confidence" (un nombre entre 0 et 100 représentant ton niveau de confiance dans la classification)
+        - "categories" (un tableau d'objets avec "name" et "confidence" pour CHAQUE catégorie)
+        
+        Exemple de structure attendue :
+        [{
+          "id": "track123",
+          "title": "Bohemian Rhapsody",
+          "artists": ["Queen"],
+          "categories": [
+            { "name": "Rock", "confidence": 95 },
+            { "name": "Pop", "confidence": 30 },
+            { "name": "Jazz", "confidence": 15 }
+          ]
+        }]
       `
 
     const result = await this.genAI.models.generateContent({
@@ -138,10 +151,13 @@ class MusicClassifierService {
         { title: item.title, artists: item.artists }
       )
 
-      await TrackGenre.updateOrCreate(
-        { trackId: track.id },
-        { trackId: track.id, categoryName: item.category }
-      )
+      // Sauvegarder tous les genres avec leurs scores de confiance
+      await Promise.all(item.categories.map(async (cat) => {
+        await TrackGenre.updateOrCreate(
+          { trackId: track.id, categoryName: cat.name },
+          { trackId: track.id, categoryName: cat.name, confidence: cat.confidence }
+        )
+      }))
     }))
   }
 }

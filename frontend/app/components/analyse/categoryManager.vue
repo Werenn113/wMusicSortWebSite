@@ -12,7 +12,7 @@
 -->
 <script setup lang="ts">
 const { categories, addCategory, removeCategory } = useCategoryManager();
-const { isLoading, startAnalysis } = useStartAnalysis();
+const { isLoading, isFinish, startAnalysis } = useStartAnalysis();
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const { isLoading, startAnalysis } = useStartAnalysis();
       />
     </div>
 
-    <div>
+    <div class="flex gap-3">
       <UButton
         @click="startAnalysis"
         :loading="isLoading"
@@ -43,6 +43,15 @@ const { isLoading, startAnalysis } = useStartAnalysis();
       >
         <UIcon name="i-lucide-play" />
         {{ isLoading ? "Analyzing..." : "Start Sorting" }}
+      </UButton>
+
+      <UButton
+        :disabled="!isFinish"
+        color="primary"
+        size="xl"
+        class="px-8 cursor-pointer"
+      >
+        Add to Spotify
       </UButton>
     </div>
   </div>

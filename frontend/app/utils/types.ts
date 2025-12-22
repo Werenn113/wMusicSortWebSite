@@ -37,10 +37,12 @@ export type MusicApp = {
  * 
  * @property name - Nom de la catégorie
  * @property color - Classe CSS Tailwind pour la couleur
+ * @property confidence - Niveau de confiance
  */
 export type Category = {
     name: string;
     color: string
+    confidence?: number
 }
 
 /**
@@ -63,23 +65,6 @@ export type Playlist = {
 }
 
 
-/**
- * Represents a music genre with its associated confidence score.
- * 
- * @remarks
- * This type is used to store genre classification results, where the confidence
- * value indicates the certainty of the classification.
- * 
- * @property name - The name of the genre (e.g., "Rock", "Jazz", "Classical")
- * @property confidence - A numeric value representing the confidence level of the genre classification,
- *                        typically ranging from 0 to 100 where higher values indicate greater certainty
- */
-export type Genre = {
-    name: string
-    confidence: number
-}
-
-
 
 /**
  * Représente un morceau musical.
@@ -87,13 +72,13 @@ export type Genre = {
  * @property id - Identifiant unique du morceau
  * @property name - Titre du morceau
  * @property artists - Liste des artistes du morceau
- * @property genre - Genre musical (déterminé par l'IA)
+ * @property categories - Liste des Category musical (déterminé par l'IA)
  */
 export type Track = {
     id: string
     name: string
     artists: string[]
-    genre: Genre
+    categories: Category[]
 }
 
 
@@ -106,12 +91,11 @@ export type Track = {
  * @property id - L'identifiant unique de la piste
  * @property title - Le titre de la piste musicale
  * @property artists - La liste des artistes associés à la piste
- * @property category - La catégorie assignée à la piste par Gemini
+ * @property category - La liste des Category assignée à la piste par Gemini
  */
 export type GeminiClassifiedTrack = {
     id: string
     title: string
     artists: string[]
-    category: string
-    confidence: number
+    categories: Category[]
 }

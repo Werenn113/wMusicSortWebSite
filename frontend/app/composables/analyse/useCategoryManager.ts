@@ -64,9 +64,22 @@ export const useCategoryManager = () => {
         categories.value = categories.value.filter((c) => c.name !== categoryName);
     };
 
+
+    const getBestCategory = (categoryList?: readonly Category[]) => {
+        const categoriesToUse = categoryList || categories.value;
+        if (!categoriesToUse || categoriesToUse.length === 0) return null;
+
+        return categoriesToUse.reduce((best, current) => {
+            const bestConfidence = best.confidence ?? 0;
+            const currentConfidence = current.confidence ?? 0;
+            return currentConfidence > bestConfidence ? current : best;
+        });
+    };
+
     return {
         categories,
         addCategory,
-        removeCategory
+        removeCategory,
+        getBestCategory
     }
 }

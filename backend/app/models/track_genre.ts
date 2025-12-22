@@ -32,6 +32,15 @@ export default class TrackGenre extends BaseModel {
   declare categoryName: string
 
   /**
+   * Niveau de confiance de l'association entre la piste et le genre musical.
+   * Valeur numérique représentant la probabilité ou la certitude que ce genre
+   * correspond à la piste.
+   * @type {number}
+   */
+  @column()
+  declare confidence: number
+
+  /**
    * Relation vers la track associée
    * @type {BelongsTo<typeof Track>}
    */

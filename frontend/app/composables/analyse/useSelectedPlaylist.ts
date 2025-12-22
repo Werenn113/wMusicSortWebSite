@@ -48,15 +48,12 @@ export const useSelectedPlaylist = () => {
      * Met à jour le genre d'une track spécifique.
      * 
      * @param trackId - L'ID de la track à mettre à jour
-     * @param genre - Le nouveau genre à assigner
+     * @param categories - La liste des Category à assigner
      */
-    const updateTrackGenre = (trackId: string, genreName: string, genreConfidence: number) => {
+    const updateTrackGenre = (trackId: string, categories: Category[]) => {
         const track = selectedTracks.value.find(t => t.id === trackId)
         if (track) {
-            track.genre = {
-                name: genreName,
-                confidence: genreConfidence
-            }
+            track.categories = categories
         }
     }
 
